@@ -96,3 +96,56 @@ def test_veri_yukle():
     assert g["yakit"] == 100
     assert "sirius" in g["baglantilar"]
     assert g["baglantilar"]["dünya"] == ["centauri", "sirius"]
+
+def test_hamle_sayaci():
+    """Her çağrıda sayacın 1 arttığını test ediyoruz."""
+    from uzay_oyunu.araclar import hamle_sayaci
+
+    sayac1 = hamle_sayaci()
+    assert sayac1() == 1
+    assert sayac1() == 2
+    assert sayac1() == 3
+
+    # İkinci sayaç öncekinden bağımsız olmalı
+    sayac2 = hamle_sayaci()
+    assert sayac2() == 1
+    assert sayac1() == 4
+
+
+def test_en_bagli_gezegenler():
+    """Gezegenlerin bağlantı sayısına göre sıralandığını test ediyoruz."""
+    from uzay_oyunu.araclar import en_bagli_gezegenler
+    from uzay_oyunu.galaksi import veri_yukle
+
+    g = veri_yukle()
+    sirali = en_bagli_gezegenler(g)
+    beklenen = ["sirius", "centauri", "dünya", "orion", "kara_delik"]
+    assert sirali == beklenen
+
+
+def test_en_bagli_gezegenler_esitlik():
+    """Bağlantı sayısı eşitse alfabetik sıraya bakılmalı."""
+    from uzay_oyunu.araclar import en_bagli_gezegenler
+
+    ornek = {
+        "baglantilar": {
+            "z": ["x"],
+            "b": ["x", "y"],
+            "a": ["x", "y"],
+        }
+    }
+    assert en_bagli_gezegenler(ornek) == ["a", "b", "z"]
+
+
+def test_sure_olc(capsys):
+    """Süre ölçerin çalıştığını ve süreyi yazdırdığını test ediyoruz."""
+    from uzay_oyunu.araclar import sure_olc
+
+    @sure_olc
+    def kare_al(sayi):
+        return sayi * sayi
+
+    assert kare_al(6) == 36
+
+    captured = capsys.readouterr()
+    assert "saniye" in captured.out

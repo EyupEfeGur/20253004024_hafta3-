@@ -32,13 +32,18 @@ def hedef_menusu(hedefler: list) -> str:
 def travel():
     """Uzay oyunu seyahat fonksiyonu."""
     try:
+        from uzay_oyunu.araclar import hamle_sayaci
         from uzay_oyunu.galaksi import veri_yukle
     except ModuleNotFoundError:
+        from araclar import hamle_sayaci
         from galaksi import veri_yukle
 
     galaksi = veri_yukle()
     if not galaksi:
         return
+
+    sayac = hamle_sayaci()
+    toplam_hamle = 0
 
     envanter = envanter_metni(True, False, True)
     if envanter:
@@ -51,7 +56,7 @@ def travel():
         destinations = galaksi["baglantilar"].get(planet, [])
 
         if not destinations:
-            print("Kara deliğe ulaştın veya yol bitti!")
+            print(f"Oyunu {toplam_hamle} hamlede bitirdin!")
             break
 
         print(f"\nŞu anki konum: {planet}")
@@ -59,6 +64,7 @@ def travel():
 
         secim = input("Seçiminiz (Çıkış için q): ")
         if secim.lower() == "q":
+            print(f"Oyunu {toplam_hamle} hamlede bitirdin!")
             break
 
         try:
@@ -66,6 +72,7 @@ def travel():
             if 0 <= index < len(destinations):
                 planet = destinations[index]
                 yakit -= 10
+                toplam_hamle = sayac()
             else:
                 print("Geçersiz seçim!")
         except ValueError:
