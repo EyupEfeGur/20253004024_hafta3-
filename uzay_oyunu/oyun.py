@@ -3,11 +3,38 @@
 # Numara : 20253004024
 # Bölüm : Bilişim Sistemleri ve Teknolojileri
 
-# Uzay oyunu seyahat başlangıç fonksiyonu
+# Saf fonksiyonlar ve uzay seyahati
 
 
-def travel() -> None:
-    print("Sende: bol kredi, yetenekli bir pilot")
+def envanter_metni(credits: bool, engines: bool, copilot: bool) -> str:
+    """Eşyaların durumuna göre envanter metnini döndürür."""
+    esyalar = []
+    if credits:
+        esyalar.append("bol kredi")
+    if engines:
+        esyalar.append("hiper motor")
+    if copilot:
+        esyalar.append("yetenekli bir pilot")
+
+    if not esyalar:
+        return ""
+    return "Sende: " + ", ".join(esyalar)
+
+
+def hedef_menusu(hedefler: list) -> str:
+    """Gidilebilecek hedefleri numaralandırarak menü olarak döndürür."""
+    satirlar = ["Nereye gitmek istersin?"]
+    for i, hedef in enumerate(hedefler, 1):
+        satirlar.append(f"[{i}] {hedef}")
+    return "\n".join(satirlar)
+
+
+def travel():
+    """Uzay oyunu seyahat fonksiyonu."""
+    envanter = envanter_metni(True, False, True)
+    if envanter:
+        print(envanter)
+
     planet = "dünya"
     yakit = 100
 
@@ -30,9 +57,7 @@ def travel() -> None:
             break
 
         print(f"\nŞu anki konum: {planet}")
-        print("Nereye gitmek istersin?")
-        for i, h in enumerate(destinations, 1):
-            print(f"[{i}] {h}")
+        print(hedef_menusu(destinations))
 
         secim = input("Seçiminiz (Çıkış için q): ")
         if secim.lower() == "q":
