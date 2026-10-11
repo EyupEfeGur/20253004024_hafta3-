@@ -69,3 +69,30 @@ def test_gorev_kaydi_unpacking(capsys):
         " sorumlu: Ayşe\n"
     )
     assert captured.out == beklenen
+
+def test_galaksi_kur_varsayilan_yakit():
+    """Yakıt verilmediğinde 50 olmalı."""
+    from uzay_oyunu.galaksi import galaksi_kur
+
+    g = galaksi_kur(["mars"], {"mars": []}, "mars")
+    assert g["konum"] == "mars"
+    assert g["yakit"] == 50
+
+
+def test_galaksi_kur_gecersiz_baslangic():
+    """Geçersiz başlangıçta ValueError vermeli."""
+    from uzay_oyunu.galaksi import galaksi_kur
+
+    with pytest.raises(ValueError):
+        galaksi_kur(["mars"], {"mars": []}, "dünya")
+
+
+def test_veri_yukle():
+    """JSON'dan doğru verilerin yüklendiğini kontrol ediyoruz."""
+    from uzay_oyunu.galaksi import veri_yukle
+
+    g = veri_yukle()
+    assert g["konum"] == "dünya"
+    assert g["yakit"] == 100
+    assert "sirius" in g["baglantilar"]
+    assert g["baglantilar"]["dünya"] == ["centauri", "sirius"]

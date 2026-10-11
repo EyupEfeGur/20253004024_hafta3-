@@ -31,26 +31,24 @@ def hedef_menusu(hedefler: list) -> str:
 
 def travel():
     """Uzay oyunu seyahat fonksiyonu."""
+    try:
+        from uzay_oyunu.galaksi import veri_yukle
+    except ModuleNotFoundError:
+        from galaksi import veri_yukle
+
+    galaksi = veri_yukle()
+    if not galaksi:
+        return
+
     envanter = envanter_metni(True, False, True)
     if envanter:
         print(envanter)
 
-    planet = "dünya"
-    yakit = 100
+    planet = galaksi.get("konum", "dünya")
+    yakit = galaksi.get("yakit", 100)
 
     while True:
-        if planet == "dünya":
-            destinations = ["centauri", "sirius"]
-        elif planet == "centauri":
-            destinations = ["sirius", "dünya", "orion"]
-        elif planet == "sirius":
-            destinations = ["centauri", "dünya", "orion", "kara_delik"]
-        elif planet == "orion":
-            destinations = ["kara_delik", "sirius"]
-        elif planet == "kara_delik":
-            destinations = []
-        else:
-            destinations = []
+        destinations = galaksi["baglantilar"].get(planet, [])
 
         if not destinations:
             print("Kara deliğe ulaştın veya yol bitti!")
